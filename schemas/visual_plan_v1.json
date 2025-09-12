@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VisualPlanV1",
+  "type": "object",
+  "required": ["global_style", "beats"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "global_style": {
+      "type": "object",
+      "required": ["topic", "style_template_key", "aspect_ratio", "tone"],
+      "properties": {
+        "topic": {"type": "string"},
+        "style_template_key": {"type": "string"},
+        "aspect_ratio": {"type": "string"},
+        "color_profile": {"type": "string"},
+        "tone": {"type": "string"}
+      }
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "descriptor", "seed_group"],
+        "properties": {
+          "id": {"type": "string"},
+          "kind": {"type": "string"},
+          "descriptor": {"type": "string"},
+          "references": {"type": "array", "items": {"type": "string"}},
+          "persist_across_beats": {"type": "boolean"},
+          "seed_group": {"type": "string"}
+        }
+      }
+    },
+    "beats": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "narration_span", "estimated_duration_s", "shot_type", "prompts"],
+        "properties": {
+          "id": {"type": "string"},
+          "narration_span": {
+            "type": "object",
+            "required": ["start_token", "end_token"],
+            "properties": {
+              "start_token": {"type": "integer", "minimum": 0},
+              "end_token": {"type": "integer", "minimum": 0}
+            }
+          },
+          "estimated_duration_s": {"type": "number", "minimum": 0},
+          "shot_type": {"type": "string"},
+          "seed_group": {"type": "string"},
+          "prompts": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["type", "prompt"],
+              "properties": {
+                "type": {"type": "string"},
+                "prompt": {"type": "string"},
+                "negatives": {"type": "string"},
+                "style_locks": {"type": "array", "items": {"type": "string"}},
+                "variation": {"type": "number"}
+              }
+            }
+          },
+          "overlays": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["type", "text", "offset_in_s"],
+              "properties": {
+                "type": {"type": "string"},
+                "text": {"type": "string"},
+                "offset_in_s": {"type": "number"},
+                "duration_s": {"type": "number"}
+              }
+            }
+          },
+          "notes": {"type": "string"}
+        }
+      }
+    }
+  }
+}
+
+

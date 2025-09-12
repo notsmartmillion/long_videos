@@ -1,0 +1,59 @@
+# Python cache/metadata
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.pytest_cache/
+.ipynb_checkpoints/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+ENV/
+env/
+
+# Environment files
+.env
+.env.local
+
+# Editors/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Project outputs & temp
+output/
+temp/
+temp/cache/
+test_output/
+
+# Generated data state
+data/topic_queue.yaml
+data/completed_topics.yaml
+
+# Model weight files (keep source code, ignore large binaries)
+*.ckpt
+*.safetensors
+*.pth
+*.pt
+*.bin
+*.onnx
+*.npz
+*.npy
+
+# Node/yarn (if any tooling adds these)
+node_modules/
+*.tsbuildinfo
+

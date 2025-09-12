@@ -1,0 +1,25 @@
+establishing: |
+  Wide shot of {location_desc}, {time_of_day}, {weather}. Style: {style_base}. Colors: {style_colors}. Mood: {style_mood}. Camera: cinematic, natural light. --no {negatives}
+
+medium_detail: |
+  Medium shot of {subject_desc} performing {action_desc}. Background: {bg_desc}. Style: {style_base}. Colors: {style_colors}. Mood: {style_mood}. --no {negatives}
+
+insert: |
+  Close-up insert of {object_desc}, tactile detail, shallow depth of field, crisp texture. Style: {style_base}. --no {negatives}
+
+map: |
+  Clean monochrome map of {region_desc}, key labels: {labels}, route path: {path_desc}, minimalist cartography, documentary graphics.
+
+diagram: |
+  Simple explanatory diagram of {concept_desc}, labeled parts: {labels}, white background, modern scientific visualization, grid subtle.
+
+archival: |
+  Period-accurate {era_desc} photograph look, film grain, slight vignette, monochrome/sepia, date stamp subtle. Subject: {subject_desc}. --no {negatives}
+
+reenactment: |
+  Cinematic reenactment of {historical_event_desc}, era-accurate wardrobe/props, shallow DOF, volumetric light, 35mm look.
+
+abstract: |
+  Metaphoric visual for {abstract_concept}, minimal, strong silhouette, negative space, cohesive with {style_base}. --no {negatives}
+
+

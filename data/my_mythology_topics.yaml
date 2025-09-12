@@ -1,0 +1,169 @@
+# My Mythology Video Topics - Add your own topics here!
+# This file will be processed by the system, and completed topics will be moved to completed_topics.yaml
+
+topics:
+  # GREEK MYTHOLOGY SERIES
+  - title: "Zeus: The King of Olympus and Master of Thunder"
+    category: "mythology"
+    subtopic: "Zeus"
+    description: "Complete story of Zeus from his birth, overthrowing the Titans, to ruling as king of the gods"
+    tags: ["greek", "olympian", "thunder", "king", "titans"]
+    priority: 1
+    target_length_minutes: 120
+    special_instructions: "Focus on his most famous myths and relationships with other gods"
+
+  - title: "Aphrodite: Goddess of Love, Beauty and Passion"
+    category: "mythology"
+    subtopic: "Aphrodite"
+    description: "The myths, powers, and romantic stories of the goddess of love"
+    tags: ["greek", "olympian", "love", "beauty", "romance"]
+    priority: 1
+
+  - title: "Athena: Wisdom, Warfare and the Patron of Athens"
+    category: "mythology"
+    subtopic: "Athena"
+    description: "The wise warrior goddess and her role in Greek civilization"
+    tags: ["greek", "olympian", "wisdom", "war", "athens"]
+    priority: 1
+
+  - title: "Poseidon: Lord of the Seas and Earthquakes"
+    category: "mythology"
+    subtopic: "Poseidon"
+    description: "Master of oceans, creator of earthquakes, and rival to other gods"
+    tags: ["greek", "olympian", "ocean", "earthquakes", "trident"]
+    priority: 2
+
+  - title: "Apollo: God of Music, Poetry, and the Sun"
+    category: "mythology"
+    subtopic: "Apollo"
+    description: "The multifaceted god of arts, prophecy, and light"
+    tags: ["greek", "olympian", "music", "sun", "prophecy"]
+    priority: 2
+
+  - title: "Artemis: The Wild Huntress and Moon Goddess"
+    category: "mythology"
+    subtopic: "Artemis"
+    description: "Twin sister of Apollo, protector of the wilderness and hunt"
+    tags: ["greek", "olympian", "hunt", "moon", "wilderness"]
+    priority: 2
+
+  - title: "Hades: Lord of the Underworld and the Dead"
+    category: "mythology" 
+    subtopic: "Hades"
+    description: "The misunderstood ruler of the underworld and judge of souls"
+    tags: ["greek", "olympian", "underworld", "death", "persephone"]
+    priority: 2
+
+  - title: "Demeter: Goddess of Harvest and the Changing Seasons"
+    category: "mythology"
+    subtopic: "Demeter"
+    description: "The agricultural goddess and the story of Persephone's abduction"
+    tags: ["greek", "olympian", "harvest", "seasons", "persephone"]
+    priority: 3
+
+  - title: "Hera: Queen of the Gods and Goddess of Marriage"
+    category: "mythology"
+    subtopic: "Hera"
+    description: "Zeus's wife, her jealousy, and her power as queen of Olympus"
+    tags: ["greek", "olympian", "marriage", "queen", "jealousy"]
+    priority: 3
+
+  - title: "Ares: The Brutal God of War and Conflict"
+    category: "mythology"
+    subtopic: "Ares"
+    description: "The violent god of war, his affairs, and his role in conflicts"
+    tags: ["greek", "olympian", "war", "violence", "conflict"]
+    priority: 3
+
+  # EPIC STORIES
+  - title: "The Trojan War: Epic Tale That Shaped Greek Legend"
+    category: "mythology"
+    subtopic: "Trojan War"
+    description: "Complete retelling from Paris and Helen to the fall of Troy"
+    tags: ["greek", "war", "troy", "homer", "epic", "helen"]
+    priority: 1
+    target_length_minutes: 150
+    special_instructions: "Include both Iliad and Odyssey perspectives"
+
+  - title: "Perseus: The Hero Who Slayed Medusa"
+    category: "mythology"
+    subtopic: "Perseus"
+    description: "The complete adventure of Perseus from birth to heroic deeds"
+    tags: ["greek", "hero", "medusa", "adventure", "gorgon"]
+    priority: 2
+
+  - title: "Theseus and the Minotaur: Hero of Athens"
+    category: "mythology"
+    subtopic: "Theseus"
+    description: "The Athenian hero's greatest adventure in the labyrinth"
+    tags: ["greek", "hero", "minotaur", "labyrinth", "athens"]
+    priority: 2
+
+  - title: "Jason and the Argonauts: Quest for the Golden Fleece"
+    category: "mythology"
+    subtopic: "Jason"
+    description: "The epic voyage to find the Golden Fleece and its consequences"
+    tags: ["greek", "hero", "argonauts", "golden fleece", "adventure"]
+    priority: 3
+
+  - title: "Hercules: The Twelve Labors of the Greatest Hero"
+    category: "mythology"
+    subtopic: "Hercules"
+    description: "All twelve impossible tasks and the hero's tragic life"
+    tags: ["greek", "hero", "labors", "strength", "tragedy"]
+    priority: 2
+    target_length_minutes: 140
+
+  # TITANS AND ORIGINS
+  - title: "The Titanomachy: War Between Titans and Olympians"
+    category: "mythology"
+    subtopic: "Titans"
+    description: "The epic ten-year war that established the Olympian gods"
+    tags: ["greek", "titans", "war", "kronos", "olympians"]
+    priority: 3
+
+  - title: "Prometheus: The Titan Who Gave Fire to Humanity"
+    category: "mythology"
+    subtopic: "Prometheus"
+    description: "The rebel Titan's gift to mankind and his eternal punishment"
+    tags: ["greek", "titan", "fire", "humanity", "punishment"]
+    priority: 3
+
+  # MYSTICAL CREATURES
+  - title: "Greek Monsters: Medusa, Hydra, and Legendary Beasts"
+    category: "mythology"
+    subtopic: "Monsters"
+    description: "Comprehensive guide to the most fearsome creatures of Greek myth"
+    tags: ["greek", "monsters", "medusa", "hydra", "creatures"]
+    priority: 4
+
+  - title: "The Odyssey: Odysseus's Epic Journey Home"
+    category: "mythology"
+    subtopic: "Odyssey"
+    description: "The ten-year journey home filled with monsters and magic"
+    tags: ["greek", "odyssey", "journey", "homer", "adventure"]
+    priority: 2
+    target_length_minutes: 130
+
+instructions: |
+  How to use this file:
+  1. Add your topics above following the same format
+  2. Set priority (1=highest, 5=lowest) to control order
+  3. The system will process topics in priority order
+  4. Completed topics are automatically moved to completed_topics.yaml
+  5. You can add new topics anytime - the system checks this file regularly
+
+categories_available:
+  - mythology
+  - space  
+  - history
+  - science
+  - nature
+  - culture
+
+tips:
+  - Keep titles descriptive and engaging
+  - Add tags for better organization
+  - Use special_instructions for specific requirements
+  - Set target_length_minutes if different from default (120)
+  - Higher priority (lower number) = processed first

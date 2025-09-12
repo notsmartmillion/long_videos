@@ -1,0 +1,152 @@
+# Extended Topic Configuration Examples
+# Users can easily add new topics by following these patterns
+
+topics:
+  # MYTHOLOGY TOPICS
+  mythology:
+    sources: ["encyclopedia_britannica", "academic_papers", "historical_texts", "mythology_databases"]
+    visual_style: "classical_art"
+    keywords: ["gods", "legends", "ancient", "stories", "mythology", "pantheon", "epic", "hero"]
+  
+  greek_mythology:
+    sources: ["classical_texts", "archaeological_sources", "scholarly_research"]
+    visual_style: "classical_art"
+    keywords: ["olympian", "zeus", "athens", "sparta", "troy", "homer", "hesiod"]
+    
+  norse_mythology:
+    sources: ["eddas", "sagas", "archaeological_evidence", "runic_inscriptions"]
+    visual_style: "nordic_art"
+    keywords: ["asgard", "odin", "thor", "ragnarok", "vikings", "runes", "valhalla"]
+
+  # SPACE & ASTRONOMY
+  space:
+    sources: ["NASA", "ESA", "scientific_journals", "astronomy_news", "observatory_data"]
+    visual_style: "space_photography"
+    keywords: ["planets", "stars", "galaxies", "spacecraft", "cosmos", "universe", "exploration"]
+    
+  planets:
+    sources: ["planetary_science", "space_missions", "telescope_observations"]
+    visual_style: "space_photography"
+    keywords: ["solar_system", "terrestrial", "gas_giant", "moons", "atmosphere", "geology"]
+    
+  deep_space:
+    sources: ["hubble", "webb_telescope", "radio_astronomy", "astrophysics_papers"]
+    visual_style: "space_photography"
+    keywords: ["nebula", "galaxy", "black_hole", "quasar", "cosmic", "interstellar"]
+
+  # HISTORY TOPICS
+  history:
+    sources: ["historical_records", "academic_sources", "documentaries", "archaeological_evidence"]
+    visual_style: "historical_imagery"
+    keywords: ["timeline", "events", "people", "civilization", "era", "culture", "empire"]
+    
+  ancient_history:
+    sources: ["archaeological_records", "ancient_texts", "scholarly_research"]
+    visual_style: "ancient_art"
+    keywords: ["mesopotamia", "egypt", "greece", "rome", "civilization", "empire", "pharaoh"]
+    
+  medieval_history:
+    sources: ["medieval_chronicles", "archaeological_evidence", "historical_analysis"]
+    visual_style: "medieval_art"
+    keywords: ["knights", "castles", "crusades", "feudalism", "monarchy", "church", "guild"]
+    
+  world_wars:
+    sources: ["military_archives", "veteran_accounts", "historical_documentation"]
+    visual_style: "historical_photography"
+    keywords: ["warfare", "strategy", "battlefield", "alliance", "resistance", "liberation"]
+
+  # SCIENCE TOPICS
+  science:
+    sources: ["research_papers", "scientific_journals", "expert_interviews", "laboratory_studies"]
+    visual_style: "scientific_visualization"
+    keywords: ["research", "discovery", "experiment", "theory", "innovation", "breakthrough"]
+    
+  physics:
+    sources: ["physics_journals", "theoretical_papers", "experimental_results"]
+    visual_style: "scientific_diagrams"
+    keywords: ["quantum", "relativity", "particle", "energy", "force", "matter", "wave"]
+    
+  biology:
+    sources: ["biological_research", "nature_documentaries", "field_studies"]
+    visual_style: "nature_photography"
+    keywords: ["evolution", "genetics", "ecosystem", "species", "adaptation", "biodiversity"]
+    
+  technology:
+    sources: ["tech_research", "innovation_reports", "engineering_papers"]
+    visual_style: "modern_tech"
+    keywords: ["innovation", "engineering", "digital", "artificial_intelligence", "robotics"]
+
+  # NATURE & GEOGRAPHY
+  nature:
+    sources: ["nature_documentaries", "ecological_studies", "wildlife_research"]
+    visual_style: "nature_photography"
+    keywords: ["wildlife", "ecosystem", "conservation", "habitat", "species", "environment"]
+    
+  oceans:
+    sources: ["marine_biology", "oceanographic_studies", "underwater_exploration"]
+    visual_style: "underwater_photography"
+    keywords: ["marine", "deep_sea", "coral_reef", "ocean_current", "marine_life"]
+    
+  mountains:
+    sources: ["geological_studies", "climbing_expeditions", "geographical_surveys"]
+    visual_style: "landscape_photography"
+    keywords: ["peak", "altitude", "geology", "climbing", "alpine", "summit", "valley"]
+    
+  forests:
+    sources: ["forestry_research", "ecological_studies", "conservation_reports"]
+    visual_style: "forest_photography"
+    keywords: ["trees", "ecosystem", "biodiversity", "canopy", "undergrowth", "wildlife"]
+
+  # CULTURAL TOPICS
+  culture:
+    sources: ["anthropological_studies", "cultural_documentation", "ethnographic_research"]
+    visual_style: "cultural_photography"
+    keywords: ["tradition", "custom", "ritual", "heritage", "identity", "community"]
+    
+  architecture:
+    sources: ["architectural_history", "building_documentation", "design_studies"]
+    visual_style: "architectural_photography"
+    keywords: ["design", "structure", "style", "monument", "building", "construction"]
+    
+  art_history:
+    sources: ["art_catalogs", "museum_collections", "artistic_analysis"]
+    visual_style: "artistic_imagery"
+    keywords: ["painting", "sculpture", "artist", "movement", "style", "masterpiece"]
+
+  # MYSTERY & EXPLORATION
+  mysteries:
+    sources: ["investigative_reports", "archaeological_discoveries", "historical_puzzles"]
+    visual_style: "mysterious_imagery"
+    keywords: ["unexplained", "discovery", "investigation", "ancient_mystery", "lost_civilization"]
+    
+  exploration:
+    sources: ["expedition_reports", "geographical_discoveries", "explorer_accounts"]
+    visual_style: "adventure_photography"
+    keywords: ["discovery", "expedition", "uncharted", "explorer", "journey", "frontier"]
+    
+  archaeology:
+    sources: ["archaeological_journals", "excavation_reports", "artifact_studies"]
+    visual_style: "archaeological_imagery"
+    keywords: ["excavation", "artifact", "ancient", "discovery", "civilization", "ruins"]
+
+# Style Template Examples for Different Moods/Genres
+extended_style_templates:
+  epic_documentary:
+    base_style: "cinematic, dramatic lighting, epic scale, documentary style"
+    colors: "rich contrasts, golden hour lighting, dramatic shadows"
+    mood: "grand, inspiring, educational"
+    
+  intimate_storytelling:
+    base_style: "warm lighting, close-up details, personal perspective"
+    colors: "warm earth tones, soft lighting"
+    mood: "personal, emotional, engaging"
+    
+  scientific_precision:
+    base_style: "clean, precise, technical illustration, data visualization"
+    colors: "clean whites, scientific blues, precise colors"
+    mood: "accurate, informative, clear"
+    
+  mysterious_atmosphere:
+    base_style: "atmospheric, moody lighting, mysterious shadows"
+    colors: "deep blues, mysterious purples, dramatic contrasts"
+    mood: "intriguing, mysterious, compelling"

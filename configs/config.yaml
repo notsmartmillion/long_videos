@@ -1,0 +1,316 @@
+# Long Video AI Automation - Main Configuration
+
+# System Settings
+system:
+  cuda_enabled: true
+  device: "cuda"  # Will auto-detect RTX 5080
+  max_memory_gb: 60  # Leave 4GB for system from your 64GB
+  batch_size: 4  # Adjust based on GPU memory usage
+  num_workers: 8  # CPU cores for data loading
+
+# Content Generation Settings
+content:
+  video_length_minutes: 30   # 30 minutes (short prod test)
+  chapters: 8  # Break into segments (auto-calculated based on length)
+  script_style: "conversational"  # conversational, documentary, educational, storytelling
+  target_audience: "general"  # general, academic, children, specialist
+  narrative_structure: "chronological"  # chronological, thematic, character-driven
+  
+# Topic Configuration (completely flexible)
+topics:
+  # Users can define their own topic categories
+  mythology:
+    sources: ["encyclopedia", "academic_papers", "historical_texts"]
+    visual_style: "classical_art"
+    keywords: ["gods", "legends", "ancient", "stories", "mythology"]
+  space:
+    sources: ["NASA", "ESA", "scientific_journals", "astronomy_news"]
+    visual_style: "space_photography"
+    keywords: ["planets", "stars", "galaxies", "spacecraft", "cosmos"]
+  history:
+    sources: ["historical_records", "academic_sources", "documentaries"]
+    visual_style: "historical_imagery"
+    keywords: ["timeline", "events", "people", "civilization", "era"]
+  science:
+    sources: ["research_papers", "scientific_journals", "expert_interviews"]
+    visual_style: "scientific_visualization"
+    keywords: ["research", "discovery", "experiment", "theory", "innovation"]
+
+# LLM Settings (Script Generation)
+llm:
+  use_local_llm: false
+  local_llm_url: "http://localhost:11434/v1"
+  model_name: "gpt-4o-mini"
+  temperature: 0.7
+  max_tokens: 4000
+
+# Research & Sources (dynamic based on topic)
+research:
+  enable_web_search: true
+  enable_academic_sources: true
+  enable_multimedia_sources: true
+  fact_check: true
+  citation_required: true
+  source_diversity: true  # Use multiple types of sources
+  update_frequency: "daily"
+
+# Text-to-Speech Settings  
+tts:
+  engine: "sapi"  # Force Windows SAPI for prod canary; switch to elevenlabs later
+  voice_model: "documentary_narrator"  # documentary_narrator, storyteller, educational
+  language: "en"
+  speed: 1.05
+  pitch: 0.0
+  volume: 0.8
+  output_quality: "high"  # high, medium, fast
+  sample_rate: 44100
+  chunk_size: 1000  # Max characters per TTS chunk
+  
+  # Voice profiles
+  voice_profiles:
+    documentary_narrator:
+      style: "authoritative, clear, measured pace"
+      characteristics: "professional documentary narration"
+    storyteller:
+      style: "engaging, warm, dynamic expression" 
+      characteristics: "narrative storytelling voice"
+    educational:
+      style: "friendly, clear, explanatory"
+      characteristics: "educational content delivery"
+
+# Image Generation Settings
+image_generation:
+  engine: "sdxl"  # flux, sdxl, stable-diffusion
+  model_path: "./models/flux"
+  resolution: "1344x768"  # SDXL-friendly multiple; upscale later in video
+  images_per_segment: 8  # New image every ~8 seconds
+  batch_size: 3  # RTX 5080 conservative (SDXL memory requirements)
+  guidance_scale: 5.5  # Balanced guidance for realism
+  num_inference_steps: 28  # Quality without overcooking
+  
+  # Style configurations (mapped to topics)
+  style_templates:
+    mythology:
+      base_style: "living human figures, realistic anatomy, cinematic volumetric light, neoclassical oil painting vibe but not statues, crisp edges"
+      colors: "rich golds, deep blues, ivory whites"
+      mood: "epic, mystical, ancient"
+    space:
+      base_style: "space photography, cosmic, astronomical"
+      colors: "deep blues, starlight, nebula colors"
+      mood: "vast, mysterious, scientific"
+    history:
+      base_style: "period accurate documentary photography, cinematic realism, authentic detail"
+      colors: "sepia tones, period appropriate"
+      mood: "authentic, dramatic, educational"
+    science:
+      base_style: "scientific visualization, clean, modern"
+      colors: "clean whites, tech blues, data visualization"
+      mood: "precise, educational, innovative"
+    nature:
+      base_style: "nature photography, wildlife, landscapes"
+      colors: "natural earth tones, vibrant greens"
+      mood: "serene, majestic, natural"
+    default:
+      base_style: "cinematic, high quality, professional"
+      colors: "balanced, natural"
+      mood: "engaging, clear, informative"
+
+# Visual Planner (2nd LLM) — drives beat-based visual plan
+visual_planner:
+  model_name: "gpt-4o-mini"
+  temperature: 0.2
+  max_tokens: 6000
+  output_schema_version: "v1"
+  beat_target_seconds: [6, 15]
+  allow_abstract_shots: true
+  enabled: true
+  artifacts_dir: "./output/artifacts"
+  use_enhanced_prompts: true
+  deterministic_retry: true
+  max_retries_per_beat: 2
+  fallback_shot_order: ["diagram","map","insert"]
+  csv_delimiter: ","
+  shot_types:
+    - establishing
+    - medium_detail
+    - insert
+    - map
+    - diagram
+    - archival
+    - reenactment
+    - abstract
+  constraints:
+    - "No modern logos or brands"
+    - "Honor era accuracy from topic"
+    - "Avoid real celebrity likenesses"
+  fallback_shots:
+    - diagram
+    - map
+    - abstract
+
+# Continuity & Seeding
+continuity:
+  seed_strategy: "deterministic"
+  seed_namespace: "doc_longform"
+  entity_consistency: "strict"
+  reuse_reference_images: true
+  variation_amount: 0.15
+  caption_similarity_threshold: 0.62
+
+# Alignment of beats to narration audio
+alignment:
+  forced_alignment: "aeneas"  # gentle | MFA | aeneas
+  align_granularity: "sentence"  # word | phrase | sentence
+  max_beat_length_seconds: 25
+  split_on_punctuation: true
+  source: "heuristic"
+  captioner: "blip"  # stub | blip | llava
+  similarity_threshold: 0.62
+
+similarity:
+  mode: "embeddings"
+
+# Topic adapters (biases; schema/code remain the same)
+topic_adapters:
+  default:
+    shot_type_probs: {establishing: 0.25, medium_detail: 0.35, insert: 0.2, diagram: 0.1, map: 0.05, archival: 0.03, abstract: 0.02}
+    negatives:
+      - "logos"
+      - "watermarks"
+      - "celebrity likeness"
+    fallback_shots: ["diagram", "map", "abstract"]
+  mythology:
+    shot_type_probs: {establishing: 0.25, medium_detail: 0.35, insert: 0.2, diagram: 0.1, map: 0.05, archival: 0.03, abstract: 0.02}
+    negatives:
+      - "statue"
+      - "marble"
+      - "engraving"
+      - "wax figure"
+      - "doll"
+      - "plaster"
+      - "cartoon"
+      - "anime"
+      - "bad anatomy"
+      - "extra limbs"
+      - "extra fingers"
+      - "distorted face"
+  space:
+    shot_type_probs: {establishing: 0.3, medium_detail: 0.2, insert: 0.1, diagram: 0.15, map: 0.1, archival: 0.05, abstract: 0.1}
+    prefer_real_assets: true
+    negatives: ["anthropomorphic planets", "cartoonish stars"]
+  history:
+    shot_type_probs: {archival: 0.15, reenactment: 0.15, establishing: 0.25, medium_detail: 0.25, insert: 0.1, diagram: 0.05, map: 0.05}
+    era_lock: true
+    negatives: ["modern clothing", "contemporary vehicles"]
+  science:
+    shot_type_probs: {diagram: 0.25, medium_detail: 0.3, insert: 0.15, establishing: 0.15, map: 0.05, archival: 0.02, abstract: 0.08}
+    diagram_renderer: "matplotlib"
+  
+# Video Assembly Settings
+video:
+  resolution: "1920x1080"
+  fps: 30
+  codec: "h264_nvenc"  # Hardware encoding for RTX 5080
+  bitrate: "8M"
+  ken_burns_effect: false
+  ken_burns_duration: 8  # seconds per image
+  transition_duration: 1  # seconds
+  background_music: true
+  music_volume: 0.15
+
+# Automation Settings
+automation:
+  schedule: "daily"  # daily, weekly, custom
+  upload_time: "09:00"  # UTC time
+  auto_thumbnail: true
+  auto_title: true
+  auto_description: true
+  auto_tags: true
+  
+# YouTube Settings
+youtube:
+  channel_id: ""  # To be filled
+  api_key: ""  # To be filled
+  privacy_status: "public"  # public, unlisted, private
+  language: "en"
+  
+  # Dynamic categories and tags based on topic
+  topic_categories:
+    mythology: "27"  # Education
+    space: "28"      # Science & Technology
+    history: "27"    # Education
+    science: "28"    # Science & Technology
+    nature: "15"     # Pets & Animals (or 28 for Science)
+    default: "27"    # Education
+    
+  base_tags:
+    - "documentary"
+    - "educational"
+    - "long form content"
+    - "ai generated"
+
+# Storage Paths
+paths:
+  models: "./models"
+  data: "./data"
+  output: "./output"
+  temp: "./temp"
+  logs: "./logs"
+  assets: "./assets"
+  cache: "./temp/cache"
+
+# Logging
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "./logs/video_ai.log"
+  max_size_mb: 100
+  backup_count: 5
+
+# Debug/diagnostics controls
+debug:
+  save_full_scripts: true
+
+# Performance Optimization (RTX 5080 + PyTorch 2.9 nightly Optimized)
+performance:
+  enable_mixed_precision: true
+  enable_flash_attention: true
+  compile_models: true  # PyTorch 2.9 compilation with RTX 5080 sm_120 support
+  cache_models: true
+  parallel_processing: true
+  async_operations: true
+  
+  # GPU Memory Management (RTX 5080 - 16GB VRAM)
+  gpu_memory_fraction: 0.85  # Conservative for RTX 5080 stability
+  enable_memory_efficient_attention: true
+  enable_cpu_offload: false  # Keep models on RTX 5080 
+  
+  # Parallel Processing Limits (RTX 5080 Optimized)
+  max_parallel_audio: 3  # TTS segments in parallel (RTX 5080 can handle more)
+  max_parallel_images: 12  # RTX 5080 can process more images in parallel (16GB VRAM)
+  max_parallel_video: 6    # Video assembly parallel segments
+  
+  # Model Compilation
+  torch_compile_mode: "reduce-overhead"  # Optimize for RTX 5080
+  enable_torch_compile: true
+
+# Authenticity Processing (avoid AI detection)
+authenticity:
+  enabled: true                    # Enable authenticity processing
+
+  # Audio processing to remove AI artifacts
+  process_audio: true              # Remove splice pops, add room tone
+
+  # Apply device compression patterns
+  apply_device_compression: true   # Mimic real device processing
+  device_type: 'phone'             # phone, webcam, dslr
+
+  # Metadata spoofing
+  spoof_metadata: true             # Spoof metadata to appear authentic
+  spoof_as: 'ios'                  # ios, macos, android, phone_camera, dslr
+
+  # Advanced settings
+  add_room_tone: true              # Subtle background ambience
+  apply_compression: true          # Natural microphone compression
+  add_imperfections: true          # Tiny natural recording artifacts
+  vary_voice_timing: true          # Subtle speed/pitch variations

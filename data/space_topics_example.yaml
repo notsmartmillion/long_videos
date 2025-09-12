@@ -1,0 +1,56 @@
+# Space & Astronomy Topic Examples
+# Copy this format for your own space documentaries
+
+topics:
+  # PLANETARY EXPLORATION
+  - title: "Europa: Jupiter's Ocean Moon and the Search for Life"
+    category: "space"
+    subtopic: "Europa"
+    description: "Deep dive into Jupiter's ice-covered moon and its subsurface ocean"
+    tags: ["jupiter", "moon", "ocean", "astrobiology", "life"]
+    priority: 1
+
+  - title: "Mars: The Red Planet's Secrets and Future Colonization"
+    category: "space"
+    subtopic: "Mars"
+    description: "Complete exploration of Mars from geology to human missions"
+    tags: ["mars", "planet", "colonization", "rovers", "future"]
+    priority: 1
+
+  - title: "Saturn's Rings: The Most Beautiful Phenomenon in Space"
+    category: "space"
+    subtopic: "Saturn"
+    description: "The formation, composition, and dynamics of Saturn's ring system"
+    tags: ["saturn", "rings", "cassini", "beauty", "formation"]
+    priority: 2
+
+  # DEEP SPACE OBJECTS
+  - title: "Black Holes: Journey to the Point of No Return"
+    category: "space"
+    subtopic: "Black Holes"
+    description: "Understanding these cosmic monsters and their effects on spacetime"
+    tags: ["black hole", "physics", "spacetime", "event horizon"]
+    priority: 1
+
+  - title: "The Andromeda Galaxy: Our Cosmic Neighbor and Future Collision"
+    category: "space"
+    subtopic: "Andromeda"
+    description: "Exploring our nearest major galaxy and the eventual galactic merger"
+    tags: ["galaxy", "andromeda", "collision", "future", "astronomy"]
+    priority: 2
+
+  # SPACE EXPLORATION
+  - title: "Voyager: Humanity's Farthest Journey into the Void"
+    category: "space" 
+    subtopic: "Voyager"
+    description: "The incredible 45-year journey of Voyager 1 and 2"
+    tags: ["voyager", "exploration", "interstellar", "golden record"]
+    priority: 2
+
+  - title: "The James Webb Space Telescope: Seeing the Dawn of Time"
+    category: "space"
+    subtopic: "JWST"
+    description: "Revolutionary discoveries from the most powerful space telescope"
+    tags: ["telescope", "jwst", "early universe", "discovery"]
+    priority: 1
+
