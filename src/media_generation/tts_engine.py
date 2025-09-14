@@ -98,6 +98,19 @@ class TTSEngine:
                     "tone": "friendly",
                     "emphasis": "explanatory"
                 }
+            ),
+            "soft_philosopher": VoiceProfile(
+                name="Soft Philosopher",
+                model_path="xtts_v2",
+                language="en",
+                gender="neutral",
+                style="soft_philosophy",
+                characteristics={
+                    "pace": "slow",
+                    "tone": "gentle",
+                    "expression": "soothing",
+                    "clarity": "high"
+                }
             )
         }
         return profiles
@@ -491,12 +504,13 @@ $synth.Dispose()
         text = re.sub(r'^\s*#+\s+.*$', '', text, flags=re.MULTILINE)
         text = re.sub(r'^\s*[-*]\s+.*$', '', text, flags=re.MULTILINE)
         
-        # Remove empty lines and extra whitespace
-        text = re.sub(r'\n\s*\n', '\n', text)
-        text = re.sub(r'\s+', ' ', text)
+        # Collapse excessive spaces, but PRESERVE double newlines as paragraph breaks
+        text = re.sub(r'[ \t]+', ' ', text)
+        # Normalize 3+ line breaks down to 2
+        text = re.sub(r'\n{3,}', '\n\n', text)
         
-        # Remove leading/trailing quotes and whitespace
-        text = text.strip().strip('"\'')
+        # Remove leading/trailing whitespace only (preserve quotes in narration)
+        text = text.strip()
         
         # Log if text was actually cleaned (this will help debug)
         self.logger.info(f"🧹 Script cleaned for TTS: {len(text)} characters ready for narration")

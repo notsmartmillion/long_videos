@@ -57,7 +57,7 @@ research:
 # Text-to-Speech Settings  
 tts:
   engine: "sapi"  # Force Windows SAPI for prod canary; switch to elevenlabs later
-  voice_model: "documentary_narrator"  # documentary_narrator, storyteller, educational
+  voice_model: "soft_philosopher"  # default: soft, gentle, reflective narrator
   language: "en"
   speed: 1.05
   pitch: 0.0

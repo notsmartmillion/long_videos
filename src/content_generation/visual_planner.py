@@ -51,12 +51,20 @@ class VisualPlanner:
                 api_key="not-needed",
             )
             self.model_name = config.visual_planner.model_name
+            try:
+                self.logger.info(f"Using LOCAL LLM for visual planner (model={self.model_name}) at {config.llm.local_llm_url}")
+            except Exception:
+                pass
         else:
             # Use OpenAI API via centralized helper
             try:
                 from src.llm.openai_client import get_openai_client, choose_model
                 self.client = get_openai_client()
                 self.model_name = choose_model("planner") or config.visual_planner.model_name
+                try:
+                    self.logger.info(f"Using OpenAI API for visual planner (model={self.model_name})")
+                except Exception:
+                    pass
             except Exception:
                 import os
                 api_key = os.environ.get("OPENAI_API_KEY")
@@ -64,6 +72,10 @@ class VisualPlanner:
                     raise RuntimeError("OPENAI_API_KEY is not set; please add it to .env.local")
                 self.client = openai.OpenAI(api_key=api_key)
                 self.model_name = os.environ.get("PLANNER_OPENAI_MODEL", config.visual_planner.model_name)
+                try:
+                    self.logger.info(f"Using OpenAI API for visual planner (model={self.model_name}) [fallback init]")
+                except Exception:
+                    pass
 
         # Paths
         self.project_root = Path(__file__).resolve().parents[2]
@@ -357,6 +369,96 @@ class VisualPlanner:
         if cursor < total_tokens and fixed_beats:
             fixed_beats[-1]["narration_span"]["end_token"] = total_tokens
         data["beats"] = fixed_beats
+        # Enrich beats with shot-aware prompts/seeds/negatives using beat_planner
+        try:
+            from src.visual.beat_planner import GlobalStyle as BPGlobalStyle, Entity as BPEntity, build_beat as bp_build_beat, split_beats_by_duration
+            # Build BP styles/entities
+            gs = BPGlobalStyle(
+                topic=gs.get("topic", topic),
+                style_template_key=gs.get("style_template_key", topic),
+                aspect_ratio=gs.get("aspect_ratio", "16:9"),
+                color_profile=gs.get("color_profile", "sRGB"),
+                tone=gs.get("tone", "documentary"),
+            )
+            # Convert entities to beat_planner form
+            bp_entities: Dict[str, BPEntity] = {}
+            for e in norm_entities:
+                bp_entities[e["id"]] = BPEntity(id=e["id"], kind=e.get("kind","entity"), descriptor=e.get("descriptor",""))
+
+            tokens = tokens  # already split script_text.split()
+            from typing import List as _List
+            from src.visual.beat_planner import _window_tokens, tokens_to_duration_s, _avoid_repeats
+            enriched_beats = []
+            last_shots: _List[str] = []
+            current_t: float = 0.0  # timeline cursor for chaining
+            for b in fixed_beats:
+                st = int(b["narration_span"]["start_token"])
+                et = int(b["narration_span"]["end_token"])
+                st = max(0, min(st, len(tokens)))
+                et = max(st, min(et, len(tokens)))
+                text_span = _window_tokens(tokens, st, et)
+                # Shot diversity and timing
+                original_shot = str(b.get("shot_type","establishing"))
+                shot = _avoid_repeats(original_shot, last_shots)
+                last_shots.append(shot)
+                # start_s chaining and duration from tokens
+                provided_start = b.get("start_s", None)
+                provided_end = b.get("end_s", None)
+                # Chain if missing; clamp if earlier than cursor
+                if provided_start is None:
+                    start_s = current_t
+                else:
+                    start_s = float(provided_start)
+                    if start_s < current_t:
+                        start_s = current_t
+                dur_s = tokens_to_duration_s(st, et, 2.5)
+                if dur_s and dur_s > 0:
+                    end_s = start_s + dur_s
+                elif provided_end is not None and float(provided_end) > start_s:
+                    end_s = float(provided_end)
+                else:
+                    # Minimal duration to avoid zero-length beats
+                    end_s = start_s + 0.5
+                current_t = end_s
+
+                beat = bp_build_beat(
+                    beat_id=str(b["id"]),
+                    shot_type=shot,
+                    narration_text=text_span,
+                    global_style=gs,
+                    entities=bp_entities,
+                    seed_group=str(b.get("seed_group", b["id"])),
+                    base_negatives=b.get("negatives", "").split(", ") if isinstance(b.get("negatives"), str) else b.get("negatives"),
+                    start_s=start_s,
+                    end_s=end_s,
+                    narration_span=(st, et),
+                )
+                # Map back to our schema
+                b["prompts"] = [{"type": "image", "prompt": beat["prompt"], "negatives": beat["negatives"], "seed_group": b.get("seed_group", b["id"]) }]
+                b["seed_group"] = b.get("seed_group", b["id"])
+                b["style_locks"] = beat.get("style_locks", [])
+                b["shot_type"] = shot
+                b["start_s"] = start_s
+                b["end_s"] = end_s
+                enriched_beats.append(b)
+            # Optional post-pass: split long beats to target density (8–12s)
+            vp_cfg = getattr(self.config, 'visual_planner', None)
+            wps = 2.5
+            tgt = (8.0, 12.0)
+            hard_min, hard_max = 6.0, 15.0
+            try:
+                wps = float(getattr(vp_cfg, 'words_per_second', 2.5))
+                tr = getattr(vp_cfg, 'beat_target_seconds', [8, 12])
+                if isinstance(tr, (list, tuple)) and len(tr) == 2:
+                    tgt = (float(tr[0]), float(tr[1]))
+                hard_min = float(getattr(vp_cfg, 'min_beat_s', 6.0))
+                hard_max = float(getattr(vp_cfg, 'max_beat_s', 15.0))
+            except Exception:
+                pass
+            data["beats"] = split_beats_by_duration(enriched_beats, words_per_second=wps, target_range=tgt, hard_min=hard_min, hard_max=hard_max)
+        except Exception as e:
+            self.logger.warning(f"Beat planner enrichment skipped: {e}")
+
         # Audit log
         try:
             self.logger.info(f"Planner audit: beats={len(norm_beats)} total_s={sum(b['estimated_duration_s'] for b in norm_beats):.1f} entities={len(norm_entities)}")

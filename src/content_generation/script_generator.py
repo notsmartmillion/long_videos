@@ -194,14 +194,30 @@ class ScriptGenerator:
             '{\n'
             '  "beats": [\n'
             '    {"id": "string", "title": "string", "summary": "string", "target_words": 0}\n'
-            '  ]\n'
+            '  ],\n'
+            '  "notes": "string"\n'
             '}'
         )
+        tone_line = f"Tone profile: {request.tone_profile}.\n" if getattr(request, 'tone_profile', None) else ""
         prompt = (
             f"Return ONLY a JSON object matching this contract.\n{contract}\n\n"
             f"Goal: plan a documentary script about {request.topic}"
             f" (subtopic: {request.subtopic or request.topic}) totaling ~{target_words_total} words.\n"
             f"Create {beats_min}-{beats_max} beats. Distribute target_words realistically; sum near {target_words_total}.\n\n"
+            f"{tone_line}"
+            "Required beat palette (order can adapt; reuse close variants):\n"
+            "1) Hook (cinematic stake)\n"
+            "2) Context & Dual Perspective (consensus vs deeper possibility)\n"
+            "3) Evidence Anchor (dates, places, sources)\n"
+            "4) Speculation Window (What if… then temper with facts)\n"
+            "5) Counterpoint / Limits (credibility check)\n"
+            "6) Modern Relevance (why this matters now)\n"
+            "7) Synthesis (integrate threads)\n"
+            "8) Philosophical Reflection (zoom out; resonant close)\n\n"
+            "Style guardrails for narration (apply to later beats too):\n"
+            "- Pure narration (no bullets, no headers, no labels, no bracketed directions)\n"
+            "- Short-to-medium sentences; occasional rhetorical questions\n"
+            "- Active voice; concrete nouns; avoid list dumps\n\n"
             f"RESEARCH CONTEXT (concise):\n{research_data[:1800]}"
         )
         try:
@@ -260,10 +276,17 @@ class ScriptGenerator:
             '  ]\n'
             '}'
         )
+        tone_line2 = f"Tone profile: {request.tone_profile}.\n\n" if getattr(request, 'tone_profile', None) else ""
         prompt = (
             f"Return ONLY a JSON object per this contract:\n{json_contract}\n\n"
             f"Write ~{target_words} words of continuous narration for beat '{beat.get('title')}'.\n"
             f"Beat summary: {beat.get('summary')}\n\n"
+            f"{tone_line2}"
+            "Voice & constraints:\n"
+            "- PURE NARRATION ONLY (no bullets, no headers, no speaker labels, no bracketed directions)\n"
+            "- Cinematic cadence: hook → evidence → what-if (speculation) → temper with facts → reflection (as applicable to this beat)\n"
+            "- Short-to-medium sentences; vary cadence; avoid list-like exposition\n"
+            "- Active voice; concrete nouns; minimize jargon/filler\n\n"
             f"RESEARCH CONTEXT (concise):\n{research_data[:1500]}"
         )
         try:
@@ -485,7 +508,7 @@ Create a 2-3 sentence description that would intrigue viewers."""
                 if not all_image_prompts:
                     all_image_prompts = await self._generate_image_prompts_from_script(script_content, request)
 
-                                # Parse composed script for duration
+                # Parse composed script for duration
                 parsed_script = await self._parse_comprehensive_script(script_content, request)
 
                 # Build metadata, title, description
@@ -497,12 +520,15 @@ Create a 2-3 sentence description that would intrigue viewers."""
                     narrative_structure=request.narrative_structure,
                     estimated_length_minutes=max(
                         1,
-                        int(self._estimate_duration_from_words(self._count_script_words(script_content)) / 60),
+                        int(self._estimate_duration_from_words(
+                            self._count_script_words(script_content)) / 60),
                     ),
                 )
 
                 title = await self._generate_title(research_report, request)
-                description = await self._generate_description_from_script(script_content, title, request)
+                description = await self._generate_description_from_script(
+                    script_content, title, request
+                )
 
                 script = VideoScript(
                     metadata=metadata,
@@ -531,16 +557,20 @@ Create a 2-3 sentence description that would intrigue viewers."""
                 except Exception:
                     pass
 
-                # ✅ Success
+                # ✅ Success, break out of retry loop
                 break
 
             except Exception as e:
                 retry_count += 1
                 if retry_count < max_retries:
-                    self.logger.warning(f"Script generation failed, retrying ({retry_count}/{max_retries}): {e}")
+                    self.logger.warning(
+                        f"Script generation failed, retrying ({retry_count}/{max_retries}): {e}"
+                    )
                     continue
                 else:
-                    self.logger.error(f"Script generation failed after {max_retries} attempts: {e}")
+                    self.logger.error(
+                        f"Script generation failed after {max_retries} attempts: {e}"
+                    )
                     raise
 
         # Print detailed script content for verification (force console output)
@@ -626,11 +656,12 @@ RESEARCH DATA:
 Write engaging content that:
 1. Flows naturally from previous content
 2. Covers all key points thoroughly
-3. Includes natural pauses for visuals
-4. Maintains narrative momentum
-5. Sets up transition to next chapter
+3. Maintains narrative momentum
+4. Sets up transition to next chapter
 
-Mark visual moments with [IMAGE: description of what should be shown]
+STRICT CONSTRAINTS:
+- PURE NARRATION ONLY (no bullets, no headers, no speaker labels, no bracketed directions)
+- Do NOT include any visual markers or directions
 
 Style: {request.content_type.value} format, {request.narrative_structure.value} structure.
 """

@@ -79,38 +79,49 @@ Ensure all information is factual and cite-worthy.
         if target_length_minutes <= 5:
             # Ultra-brief test mode — PURE NARRATION ONLY
             prompt = f"""
-CRITICAL INSTRUCTION: Produce PURE NARRATION ONLY for a {target_length_minutes}-minute TEST video. No labels, no headers, no bullet lists, no stage directions, and absolutely NO image or visual descriptions.
+CRITICAL INSTRUCTION: Produce PURE NARRATION ONLY for a {target_length_minutes}-minute TEST video. 
+No labels, no headers, no bullet lists, no stage directions, and absolutely NO image or visual descriptions.
 
 TOPIC: "{topic}"{f" focusing on {subtopic}" if subtopic else ""}
 TARGET: MAXIMUM 120 words total
 
-RESEARCH DATA (summarize briefly):
+RESEARCH SNAPSHOT (summarize, do not list; integrate naturally):
 {research_data[:500]}...
 
-MANDATORY RULES:
-- Do NOT include any of these: "Part 1", "Chapter", "Title:", "Opening Hook:", "Image:", "Image description:", brackets [ ... ], parentheses ( ... ) with directions, or speaker labels like "Narrator:".
-- Write continuous narration as if being spoken aloud to the viewer.
-- Keep it concise, cinematic, and engaging.
-- End with a single-line reflective closing.
+TONE & CADENCE:
+- Soft, ASMR-like, gently provocative—like a late-night philosophy teacher.
+- 2–5 sentences total; slow rhythm; one resonant closing line.
 
-IMPLIED OUTLINE (DO NOT LABEL IN OUTPUT):
-- Start with a provocative hook.
-- Pivot to a second viewpoint or tension (dual perspective) in one line.
-- Include one concrete evidence/reference (e.g., an era, place, or known figure) in one line.
-- Connect to modern relevance in one line.
-- Conclude with a philosophical reflection in one line.
-
-OUTPUT FORMAT:
-- A single block of narration prose (2–5 sentences). Nothing else.
+FLOW REQUIREMENTS:
+- Do not restart with a fresh introduction once narration begins.
+- Maintain a single continuous thought from start to finish.
+- Do not repeat earlier sentences or restate the thesis mid-script (no "In the heart of...", "Zeus, the king of the gods..." style resets).
+- Use transitional connectors ("Yet…", "And so…", "Consider also…") to keep flow smooth.
 """
+            return prompt.strip()
         else:
             # Full documentary template — PURE NARRATION ONLY
+            # Soft philosopher tone (ASMR-like, reflective, gentle)
+            SOFT_PHILOSOPHER_TONE = """
+VOICE & CADENCE:
+- Narration must feel like an eccentric philosopher explaining ideas softly, almost like a bedtime story.
+- Calm, deliberate rhythm; sentences flow slowly and smoothly.
+- Each paragraph should invite the listener in, never overwhelm.
+- Use provocative rhetorical questions — but in a gentle, curious way, not aggressive.
+- Weave between concrete facts and philosophical reflection, always in a soothing, human voice.
+- Avoid harsh or dramatic phrasing; prefer warmth, metaphor, and subtle wonder.
+- Output PURE narration (no labels, no bullets, no scene directions).
+"""
+
             prompt = f"""
 You are writing a long-form documentary narration about "{topic}"{f" focusing on {subtopic}" if subtopic else ""} in the style of high-production YouTube documentaries. Create a {target_length_minutes}-minute script with a single narrator voice.
+Audience: curious, thoughtful, open to free-thinking and gentle provocation.
+
+OUTPUT: Continuous narration paragraphs only.
 
 TARGET LENGTH: {target_length_minutes} minutes (~{target_words} words)
 
-RESEARCH DATA TO INTEGRATE:
+RESEARCH DATA TO INTEGRATE (weave naturally; do not list mechanically):
 {research_data}
 
 NARRATIVE VOICE & STYLE:
@@ -120,6 +131,16 @@ NARRATIVE VOICE & STYLE:
 - Balance scientific/technical clarity with philosophical reflection
 - Avoid dry reporting; aim for dramatic pacing and engaging delivery
 - Speak directly TO the audience, making them feel part of the journey
+
+{SOFT_PHILOSOPHER_TONE}
+
+FLOW REQUIREMENTS:
+- Maintain continuous flow — never restart with a brand-new introduction once the script has begun.
+- Do not open a new paragraph with fresh re-introductions of the main subject.
+- Do not repeat earlier sentences or restate the thesis (no "In the heart of...", "Zeus, the king of the gods..." style resets).
+- Each paragraph must connect directly to the last, using transitions ("Yet…", "But then…", "Meanwhile…", "Consider also…").
+- Avoid mid-script conclusions or final-sounding wrap-ups until the very end.
+- Save rhetorical/philosophical closes for the final paragraph only.
 
 MANDATORY RULES (STRUCTURE IMPLIED, BUT NO LABELS):
 - Do NOT include any structural labels or meta text (no "Part/Chapter" lines, no headers, no bullets).
@@ -141,9 +162,11 @@ STYLE CUES (APPLY, DO NOT PRINT):
 - Use short-to-medium sentences with occasional rhetorical questions for rhythm.
 - Prefer concrete nouns and active verbs; avoid listy exposition.
 - Maintain measured suspense; vary cadence; avoid fluff.
+- Aim for 90–160 words per paragraph (avoid walls of text).
 
 OUTPUT FORMAT:
 - Title line (one line, no "Title:" label).
+- Title must be unique and not repeated in the narration.
 - 5–9 paragraphs of pure narration prose.
 - Final single-paragraph philosophical reflection.
 
@@ -152,7 +175,7 @@ CRITICAL VOICE REQUIREMENTS:
 - Balance wonder with rigor; avoid filler and jargon
 - Aim for ~even paragraph distribution, totaling ~{target_words} words
 """
-        return prompt.strip()
+            return prompt.strip()
     
     @staticmethod
     def get_image_prompt_generation(script_text: str, topic: str, 
@@ -236,6 +259,8 @@ Generate 10 different title options that are:
 3. Accurate to the content
 4. Appropriate for a 2+ hour documentary
 5. Appeal to both casual viewers and enthusiasts
+6. Include 2–3 options with reflective, philosophical tone (e.g., "X: A Question We Keep Asking")
+7. Include 1–2 options that juxtapose certainty vs wonder (e.g., "X: What We Know—and What We Imagine")
 
 Include a mix of:
 - Straightforward descriptive titles

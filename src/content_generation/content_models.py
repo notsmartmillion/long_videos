@@ -139,6 +139,7 @@ class ContentGenerationRequest(BaseModel):
     content_type: ContentType = ContentType.DOCUMENTARY
     narrative_structure: NarrativeStructure = NarrativeStructure.CHRONOLOGICAL
     target_audience: str = "general"
+    tone_profile: Optional[str] = None
     style_preferences: Dict[str, Any] = {}
     specific_requirements: List[str] = []
     avoid_topics: List[str] = []
