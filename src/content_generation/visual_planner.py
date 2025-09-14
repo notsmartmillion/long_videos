@@ -456,6 +456,18 @@ class VisualPlanner:
             except Exception:
                 pass
             data["beats"] = split_beats_by_duration(enriched_beats, words_per_second=wps, target_range=tgt, hard_min=hard_min, hard_max=hard_max)
+
+            # Density logging
+            try:
+                durs = [(b.get("end_s", 0.0) - b.get("start_s", 0.0)) for b in data["beats"]]
+                if durs:
+                    d_sorted = sorted(durs)
+                    p50 = d_sorted[len(d_sorted)//2]
+                    self.logger.info(
+                        f"Planner density: beats={len(durs)} total_s={sum(durs):.1f} avg={sum(durs)/len(durs):.2f}s min={min(durs):.2f}s p50={p50:.2f}s max={max(durs):.2f}s"
+                    )
+            except Exception:
+                pass
         except Exception as e:
             self.logger.warning(f"Beat planner enrichment skipped: {e}")
 
